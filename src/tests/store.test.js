@@ -4,17 +4,16 @@ import useVelotafStore from '../stores/velotafStore'
 
 describe('VelotafStore', () => {
   beforeEach(() => {
-    // Réinitialiser le store avant chaque test
-    useVelotafStore.setState({
-      trajets: {},
-      settings: {
-        distanceKm: 10,
-        consommationL100: 6,
-        prixCarburantEuro: 1.75,
-        indemniteKmEuro: 0.35,
-      },
-    })
+  useVelotafStore.setState({
+    trajets: {},
+    settings: {
+      distanceKm: 10,
+      consommationL100: 6,
+      prixCarburantEuro: 1.75,
+      indemniteJourEuro: 3.00,
+    },
   })
+})
 
   it('devrait enregistrer un trajet vélo', () => {
     const { result } = renderHook(() => useVelotafStore())
@@ -66,15 +65,15 @@ describe('VelotafStore', () => {
     expect(stats.carburantEconomiseEuro).toBe(2.10)
   })
 
-  it('devrait calculer l\'indemnité kilométrique', () => {
-    const { result } = renderHook(() => useVelotafStore())
-    act(() => {
-      // 1 jour vélo, 10km aller+retour = 20km * 0.35€ = 7€
-      result.current.enregistrerTrajet('2026-03-30', 'velo')
-    })
-    const stats = result.current.getStats()
-    expect(stats.indemniteTotaleEuro).toBe(7)
+it("devrait calculer l'indemnité journalière", () => {
+  const { result } = renderHook(() => useVelotafStore())
+  act(() => {
+    // 1 jour vélo * 3€/jour = 3€
+    result.current.enregistrerTrajet('2026-03-30', 'velo')
   })
+  const stats = result.current.getStats()
+  expect(stats.indemniteTotaleEuro).toBe(3)
+})
 
   it('devrait mettre à jour les paramètres', () => {
     const { result } = renderHook(() => useVelotafStore())

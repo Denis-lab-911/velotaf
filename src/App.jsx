@@ -1,10 +1,17 @@
+import BoutonTrajet from './components/BoutonTrajet'
+import Statistiques from './components/Statistiques'
+import Reglages from './components/Reglages'
+
 function App() {
   return (
-    <div className="min-h-screen bg-green-50 flex items-center justify-center">
-      <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-        <span className="text-5xl">🚴</span>
-        <h1 className="text-2xl font-bold text-green-700 mt-4">VéloTaf</h1>
-        <p className="text-gray-500 mt-2">Votre compagnon vélo-boulot !</p>
+    <div className="min-h-screen bg-green-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-lg w-full max-w-sm">
+        <div className="p-6 border-b border-gray-100 text-center">
+          <h1 className="text-2xl font-bold text-green-700">🚴 VéloTaf</h1>
+        </div>
+        <BoutonTrajet />
+        <Statistiques />
+        <Reglages />
       </div>
     </div>
   )
