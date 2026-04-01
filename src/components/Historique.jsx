@@ -6,7 +6,6 @@ import {
   getJoursOuvresDuMois,
   getTousLesJoursDuMois,
   getNomMois,
-  getJoursFeries,
 } from '../utils/joursFeries'
 
 const RAISONS = [
@@ -44,7 +43,6 @@ export default function Historique() {
 
   const joursOuvres = getJoursOuvresDuMois(annee, mois)
   const tousLesJours = getTousLesJoursDuMois(annee, mois)
-  const feries = getJoursFeries(annee)
 
   const moisPrecedent = () => {
     if (mois === 0) { setMois(11); setAnnee(annee - 1) }
@@ -121,7 +119,6 @@ export default function Historique() {
                 {tousLesJours.map((dateStr) => {
                   const jour = parseInt(dateStr.split('-')[2])
                   const estOuvre = estJourOuvre(dateStr)
-                  const estFerie = feries.includes(dateStr)
                   const statut = trajets[dateStr]
                   const estAujourdhui = dateStr === today
                   const estFutur = dateStr > today
