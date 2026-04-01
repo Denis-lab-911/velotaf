@@ -6,10 +6,18 @@ import Reglages from '../components/Reglages'
 import useVelotafStore from '../stores/velotafStore'
 
 // On simule la date d'aujourd'hui pour que ce soit toujours un jour ouvré
-vi.mock('../utils/joursFeries', () => ({
-  aujourdhui: () => '2026-03-30',
-  estJourOuvre: () => true,
-}))
+vi.mock('../utils/joursFeries', async (importOriginal) => {
+  const original = await importOriginal()
+  return {
+    ...original,
+    aujourdhui: () => '2026-03-30',
+    estJourOuvre: (dateStr) => {
+      const date = new Date(dateStr)
+      const jour = date.getDay()
+      return jour !== 0 && jour !== 6
+    },
+  }
+})
 
 beforeEach(() => {
   useVelotafStore.setState({
@@ -104,5 +112,52 @@ describe('Reglages', () => {
     render(<Reglages />)
     fireEvent.click(screen.getByText(/Réglages/))
     expect(screen.getByText(/Sauvegarder/)).toBeInTheDocument()
+  })
+})
+import Historique from '../components/Historique'
+
+describe('Historique', () => {
+  it('devrait afficher le bouton Historique replié par défaut', () => {
+    render(<Historique />)
+    expect(screen.getByText(/Historique/)).toBeInTheDocument()
+    expect(screen.queryByText(/Calendrier/)).not.toBeInTheDocument()
+  })
+
+  it('devrait afficher les boutons Calendrier et Liste après ouverture', () => {
+    render(<Historique />)
+    fireEvent.click(screen.getByText(/Historique/))
+    expect(screen.getByText(/Calendrier/)).toBeInTheDocument()
+    expect(screen.getByText(/Liste/)).toBeInTheDocument()
+  })
+
+  it('devrait afficher la vue liste au clic', () => {
+    render(<Historique />)
+    fireEvent.click(screen.getByText(/Historique/))
+    fireEvent.click(screen.getByText(/Liste/))
+    expect(screen.getByText(/Liste/)).toBeInTheDocument()
+  })
+
+  it('devrait naviguer au mois précédent', () => {
+    render(<Historique />)
+    fireEvent.click(screen.getByText(/Historique/))
+    expect(screen.getByText(/avril 2026/i)).toBeInTheDocument()
+    fireEvent.click(screen.getByText('‹'))
+    expect(screen.getByText(/mars 2026/i)).toBeInTheDocument()
+  })
+
+  it('devrait naviguer au mois suivant', () => {
+    render(<Historique />)
+    fireEvent.click(screen.getByText(/Historique/))
+    fireEvent.click(screen.getByText('›'))
+    expect(screen.getByText(/mai 2026/i)).toBeInTheDocument()
+  })
+
+  it('devrait ouvrir la modal d\'édition au clic sur un jour passé', () => {
+    render(<Historique />)
+    fireEvent.click(screen.getByText(/Historique/))
+    fireEvent.click(screen.getByText('‹'))
+    fireEvent.click(screen.getByText('2'))
+    expect(screen.getByText(/Annuler/)).toBeInTheDocument()
+    expect(screen.getByText('🚴 Vélo')).toBeInTheDocument()
   })
 })

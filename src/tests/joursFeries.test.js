@@ -30,3 +30,29 @@ describe('Jours fériés français', () => {
     expect(estJourOuvre('2026-05-01')).toBe(false)
   })
 })
+import { getJoursOuvresDuMois, getTousLesJoursDuMois, getNomMois } from '../utils/joursFeries'
+
+describe('Utilitaires du mois', () => {
+  it('devrait retourner le bon nombre de jours ouvrés en mars 2026', () => {
+    // Mars 2026 : 31 jours, 4 week-ends complets = 22 jours ouvrés (pas de férié)
+    expect(getJoursOuvresDuMois(2026, 2)).toHaveLength(22)
+  })
+
+it('devrait retourner le bon nombre de jours ouvrés en mai 2026', () => {
+  // Mai 2026 : 1er mai + 8 mai + Ascension 14 mai + Pentecôte 25 mai = 4 fériés
+  expect(getJoursOuvresDuMois(2026, 4)).toHaveLength(17)
+})
+
+  it('devrait retourner 31 jours pour mars 2026', () => {
+    expect(getTousLesJoursDuMois(2026, 2)).toHaveLength(31)
+  })
+
+  it('devrait retourner 28 jours pour février 2026', () => {
+    expect(getTousLesJoursDuMois(2026, 1)).toHaveLength(28)
+  })
+
+  it('devrait retourner le nom du mois en français', () => {
+    expect(getNomMois(2026, 2)).toContain('mars')
+    expect(getNomMois(2026, 0)).toContain('janvier')
+  })
+})

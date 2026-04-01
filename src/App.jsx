@@ -1,6 +1,7 @@
 import BoutonTrajet from './components/BoutonTrajet'
 import Statistiques from './components/Statistiques'
 import Reglages from './components/Reglages'
+import Historique from './components/Historique'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         </div>
         <BoutonTrajet />
         <Statistiques />
+        <Historique />
         <Reglages />
       </div>
     </div>

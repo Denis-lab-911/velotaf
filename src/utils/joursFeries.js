@@ -81,3 +81,54 @@ export function aujourdhui() {
   const dd = String(d.getDate()).padStart(2, '0')
   return `${yyyy}-${mm}-${dd}`
 }
+
+/**
+ * Retourne tous les jours ouvrés d'un mois donné
+ */
+export function getJoursOuvresDuMois(annee, mois) {
+  const jours = []
+  const nbJours = new Date(annee, mois + 1, 0).getDate()
+
+  for (let j = 1; j <= nbJours; j++) {
+    const date = new Date(annee, mois, j)
+    const yyyy = date.getFullYear()
+    const mm = String(date.getMonth() + 1).padStart(2, '0')
+    const dd = String(date.getDate()).padStart(2, '0')
+    const dateStr = `${yyyy}-${mm}-${dd}`
+
+    if (estJourOuvre(dateStr)) {
+      jours.push(dateStr)
+    }
+  }
+
+  return jours
+}
+
+/**
+ * Retourne tous les jours d'un mois (y compris week-ends et fériés)
+ * pour la vue calendrier
+ */
+export function getTousLesJoursDuMois(annee, mois) {
+  const jours = []
+  const nbJours = new Date(annee, mois + 1, 0).getDate()
+
+  for (let j = 1; j <= nbJours; j++) {
+    const date = new Date(annee, mois, j)
+    const yyyy = date.getFullYear()
+    const mm = String(date.getMonth() + 1).padStart(2, '0')
+    const dd = String(date.getDate()).padStart(2, '0')
+    jours.push(`${yyyy}-${mm}-${dd}`)
+  }
+
+  return jours
+}
+
+/**
+ * Retourne le nom du mois en français
+ */
+export function getNomMois(annee, mois) {
+  return new Date(annee, mois, 1).toLocaleDateString('fr-FR', {
+    month: 'long',
+    year: 'numeric',
+  })
+}
