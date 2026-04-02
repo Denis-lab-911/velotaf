@@ -8,14 +8,17 @@ const useVelotafStore = create(
         distanceKm: 10,
         consommationL100: 6,
         prixCarburantEuro: 1.75,
+        indemniteType: 'jour', // 'jour' | 'km' | 'aucune'
         indemniteJourEuro: 3.00,
+        indemniteKmEuro: 0.25,
+        indemnitePlafondEuro: 20,
         statsPeriod: 'annee',
       },
 
       trajets: {},
 
       updateSettings: (newSettings) => {
-        const numericKeys = ['distanceKm', 'consommationL100', 'prixCarburantEuro', 'indemniteJourEuro']
+        const numericKeys = ['distanceKm', 'consommationL100', 'prixCarburantEuro', 'indemniteJourEuro', 'indemniteKmEuro', 'indemnitePlafondEuro']
         const normalizedSettings = Object.entries(newSettings).reduce((acc, [key, value]) => {
           if (numericKeys.includes(key)) {
             if (typeof value === 'string') {
@@ -56,7 +59,10 @@ const useVelotafStore = create(
           distanceKm,
           consommationL100,
           prixCarburantEuro,
+          indemniteType,
           indemniteJourEuro,
+          indemniteKmEuro,
+          indemnitePlafondEuro,
           statsPeriod,
         } = settings
 
@@ -87,7 +93,16 @@ const useVelotafStore = create(
         const distanceTotaleKm = joursVelo * distanceKm * 2
         const carburantEconomiseL = (distanceTotaleKm * consommationL100) / 100
         const carburantEconomiseEuro = carburantEconomiseL * prixCarburantEuro
-        const indemniteTotaleEuro = joursVelo * indemniteJourEuro
+
+        let indemniteTotaleEuro = 0
+        if (indemniteType === 'jour') {
+          indemniteTotaleEuro = joursVelo * indemniteJourEuro
+        } else if (indemniteType === 'km') {
+          const distanceParTrajet = distanceKm * 2
+          const indemniteParTrajet = Math.min(distanceParTrajet * indemniteKmEuro, indemnitePlafondEuro > 0 ? indemnitePlafondEuro : Infinity)
+          indemniteTotaleEuro = joursVelo * indemniteParTrajet
+        }
+
         const co2EconomiseKg = carburantEconomiseL * 2.37
         const economiesTotal = carburantEconomiseEuro + indemniteTotaleEuro
 

@@ -10,7 +10,11 @@ describe('VelotafStore', () => {
       distanceKm: 10,
       consommationL100: 6,
       prixCarburantEuro: 1.75,
+      indemniteType: 'jour',
       indemniteJourEuro: 3.00,
+      indemniteKmEuro: 0.25,
+      indemnitePlafondEuro: 20,
+      statsPeriod: 'annee',
     },
   })
 })
@@ -99,6 +103,32 @@ it("devrait calculer l'indemnité journalière", () => {
       result.current.updateSettings({ statsPeriod: 'mois' })
     })
     expect(result.current.settings.statsPeriod).toBe('mois')
+  })
+
+  it('devrait permettre de configurer indemnité km avec plafond', () => {
+    const { result } = renderHook(() => useVelotafStore())
+    act(() => {
+      result.current.updateSettings({ indemniteType: 'km', indemniteKmEuro: 0.5, indemnitePlafondEuro: 10 })
+      result.current.enregistrerTrajet('2026-03-30', 'velo')
+      result.current.enregistrerTrajet('2026-03-31', 'velo')
+    })
+    const stats = result.current.getStats('annee')
+    expect(result.current.settings.indemniteType).toBe('km')
+    expect(result.current.settings.indemniteKmEuro).toBe(0.5)
+    expect(result.current.settings.indemnitePlafondEuro).toBe(10)
+    // 2 jours, 10km aller simple => 40km total par jour -> 20€ par jour -> plafonnée à 10€ par jour -> total 20€
+    expect(stats.indemniteTotaleEuro).toBe(20)
+  })
+
+  it('devrait laisser aucun indemnité quand selectionné aucune', () => {
+    const { result } = renderHook(() => useVelotafStore())
+    act(() => {
+      result.current.updateSettings({ indemniteType: 'aucune' })
+      result.current.enregistrerTrajet('2026-03-30', 'velo')
+      result.current.enregistrerTrajet('2026-03-31', 'velo')
+    })
+    const stats = result.current.getStats('annee')
+    expect(stats.indemniteTotaleEuro).toBe(0)
   })
 
   it('devrait exclure congés/télétravail du % vélo', () => {

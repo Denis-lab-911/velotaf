@@ -2,7 +2,7 @@ import useVelotafStore from '../stores/velotafStore'
 
 export default function Statistiques() {
   const { getStats, settings, updateSettings } = useVelotafStore()
-  const { statsPeriod } = settings
+  const { statsPeriod, indemniteType } = settings
   const stats = getStats(statsPeriod)
 
   const periodButtons = [
@@ -58,10 +58,12 @@ export default function Statistiques() {
           <p className="text-xs text-gray-500 mt-1">Carburant économisé</p>
         </div>
 
-        <div className="bg-purple-50 rounded-xl p-4 text-center">
-          <p className="text-3xl font-bold text-purple-600">{stats.indemniteTotaleEuro}€</p>
-          <p className="text-xs text-gray-500 mt-1">Indemnité vélo</p>
-        </div>
+        {indemniteType !== 'aucune' && (
+          <div className="bg-purple-50 rounded-xl p-4 text-center">
+            <p className="text-3xl font-bold text-purple-600">{stats.indemniteTotaleEuro}€</p>
+            <p className="text-xs text-gray-500 mt-1">Indemnité vélo</p>
+          </div>
+        )}
       </div>
 
       <div className="mt-4 bg-emerald-50 rounded-xl p-4 text-center border-2 border-emerald-200">

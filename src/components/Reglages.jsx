@@ -8,7 +8,10 @@ export default function Reglages() {
     distanceKm: String(settings.distanceKm),
     consommationL100: String(settings.consommationL100),
     prixCarburantEuro: String(settings.prixCarburantEuro),
+    indemniteType: settings.indemniteType || 'jour',
     indemniteJourEuro: String(settings.indemniteJourEuro),
+    indemniteKmEuro: String(settings.indemniteKmEuro),
+    indemnitePlafondEuro: String(settings.indemnitePlafondEuro),
   })
   const [sauvegarde, setSauvegarde] = useState(false)
 
@@ -17,7 +20,10 @@ export default function Reglages() {
       distanceKm: String(settings.distanceKm),
       consommationL100: String(settings.consommationL100),
       prixCarburantEuro: String(settings.prixCarburantEuro),
+      indemniteType: settings.indemniteType || 'jour',
       indemniteJourEuro: String(settings.indemniteJourEuro),
+      indemniteKmEuro: String(settings.indemniteKmEuro),
+      indemnitePlafondEuro: String(settings.indemnitePlafondEuro),
     })
   }, [settings])
 
@@ -30,7 +36,10 @@ export default function Reglages() {
       distanceKm: Number(valeurs.distanceKm) || 0,
       consommationL100: Number(valeurs.consommationL100) || 0,
       prixCarburantEuro: Number(valeurs.prixCarburantEuro) || 0,
+      indemniteType: valeurs.indemniteType || 'jour',
       indemniteJourEuro: Number(valeurs.indemniteJourEuro) || 0,
+      indemniteKmEuro: Number(valeurs.indemniteKmEuro) || 0,
+      indemnitePlafondEuro: Number(valeurs.indemnitePlafondEuro) || 0,
     })
     setSauvegarde(true)
     setTimeout(() => setSauvegarde(false), 2000)
@@ -94,20 +103,70 @@ export default function Reglages() {
           </div>
 
 <div>
-  <label htmlFor="indemniteJourEuro" className="block text-sm font-medium text-gray-600 mb-1">
-    Indemnité vélo versée par l'employeur (€/jour)
-  </label>
-  <input
-    id="indemniteJourEuro"
-    type="number"
-    value={valeurs.indemniteJourEuro}
-    onChange={(e) => handleChange('indemniteJourEuro', e.target.value)}
-    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
-    min="0"
-    step="0.50"
-  />
-</div>
+            <label htmlFor="indemniteType" className="block text-sm font-medium text-gray-600 mb-1">
+              Type d'indemnité vélo
+            </label>
+            <select
+              id="indemniteType"
+              value={valeurs.indemniteType}
+              onChange={(e) => handleChange('indemniteType', e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
+            >
+              <option value="jour">Forfait jour</option>
+              <option value="km">Au kilomètre</option>
+              <option value="aucune">Aucune indemnité</option>
+            </select>
+          </div>
 
+          {valeurs.indemniteType === 'jour' && (
+            <div>
+              <label htmlFor="indemniteJourEuro" className="block text-sm font-medium text-gray-600 mb-1">
+                Indemnité vélo versée par l'employeur (€/jour)
+              </label>
+              <input
+                id="indemniteJourEuro"
+                type="number"
+                value={valeurs.indemniteJourEuro}
+                onChange={(e) => handleChange('indemniteJourEuro', e.target.value)}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
+                min="0"
+                step="0.50"
+              />
+            </div>
+          )}
+
+          {valeurs.indemniteType === 'km' && (
+            <>
+              <div>
+                <label htmlFor="indemniteKmEuro" className="block text-sm font-medium text-gray-600 mb-1">
+                  Indemnité vélo par kilomètre (€/km)
+                </label>
+                <input
+                  id="indemniteKmEuro"
+                  type="number"
+                  value={valeurs.indemniteKmEuro}
+                  onChange={(e) => handleChange('indemniteKmEuro', e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+              <div>
+                <label htmlFor="indemnitePlafondEuro" className="block text-sm font-medium text-gray-600 mb-1">
+                  Plafond indemnité (€/trajet)
+                </label>
+                <input
+                  id="indemnitePlafondEuro"
+                  type="number"
+                  value={valeurs.indemnitePlafondEuro}
+                  onChange={(e) => handleChange('indemnitePlafondEuro', e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
+                  min="0"
+                  step="0.1"
+                />
+              </div>
+            </>
+          )}
           <button
             onClick={handleSauvegarder}
             className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors"

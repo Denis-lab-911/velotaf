@@ -7,7 +7,16 @@ Application web progressive (PWA) pour suivre vos trajets domicile-travail à v�
 - **Saisie rapide** — Indiquez en 2 clics si vous avez pris le vélo
 - **Raisons d'absence** — Télétravail, congés, météo, agenda, fatigue, autre
 - **Jours fériés français** — Les week-ends et jours fériés sont exclus automatiquement
-- **Statistiques** — Pourcentage de trajets en vélo, carburant économisé, indemnité kilométrique
+- **Statistiques avancées** —
+  - Sélection de période (année en cours / mois en cours)
+  - Jours à vélo
+  - % trajets à vélo (exclut congés et télétravail)
+  - Kilométrage cumulé pour la période
+  - CO2 économisé (kg, calcul à partir du carburant économisé)
+  - Carburant économisé
+  - Indemnité vélo cumulée
+  - Économies totales (carburant + indemnité)
+- **Indemnités flexibles** — 3 modes : forfait journalier, au kilomètre avec plafond par trajet, ou aucune indemnité
 - **Historique** — Vue calendrier et vue liste, avec possibilité de modifier les trajets passés
 - **Réglages** — Distance, consommation, prix du carburant et indemnité paramétrables
 - **PWA** — Installable sur Android comme une application native
@@ -70,7 +79,7 @@ VITE_GOOGLE_CLIENT_ID=votre_client_id_google
 
 Chaque `git push` sur la branche `main` déclenche automatiquement :
 1. L'installation des dépendances
-2. Les tests automatisés (36 tests)
+2. Les tests automatisés (45 tests)
 3. Le build de production
 4. Le déploiement sur Vercel (si les tests passent)
 

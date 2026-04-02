@@ -26,7 +26,11 @@ beforeEach(() => {
       distanceKm: 10,
       consommationL100: 6,
       prixCarburantEuro: 1.75,
+      indemniteType: 'jour',
       indemniteJourEuro: 3.00,
+      indemniteKmEuro: 0.25,
+      indemnitePlafondEuro: 20,
+      statsPeriod: 'annee',
     },
   })
 })
@@ -119,6 +123,16 @@ describe('Reglages', () => {
 
     expect(useVelotafStore.getState().settings.distanceKm).toBe(15)
     expect(distanceInput.value).toBe('15')
+  })
+
+  it('devrait cacher la tuile indemnité si l’utilisateur choisit sans indemnité', () => {
+    render(<Reglages />)
+    fireEvent.click(screen.getByText(/Réglages/))
+    fireEvent.change(screen.getByLabelText(/Type d'indemnité vélo/i), { target: { value: 'aucune' } })
+    fireEvent.click(screen.getByText(/Sauvegarder/))
+
+    render(<Statistiques />)
+    expect(screen.queryByText(/Indemnité vélo/)).not.toBeInTheDocument()
   })
 })
 import Historique from '../components/Historique'
