@@ -92,4 +92,62 @@ it("devrait calculer l'indemnité journalière", () => {
     expect(result.current.settings.distanceKm).toBe(15)
     expect(result.current.settings.consommationL100).toBe(6)
   })
+
+  it('devrait conserver statsPeriod en chaîne de caractères', () => {
+    const { result } = renderHook(() => useVelotafStore())
+    act(() => {
+      result.current.updateSettings({ statsPeriod: 'mois' })
+    })
+    expect(result.current.settings.statsPeriod).toBe('mois')
+  })
+
+  it('devrait exclure congés/télétravail du % vélo', () => {
+    const { result } = renderHook(() => useVelotafStore())
+    const year = new Date().getFullYear()
+    act(() => {
+      result.current.enregistrerTrajet(`${year}-03-30`, 'velo')
+      result.current.enregistrerTrajet(`${year}-03-31`, 'teletravail')
+      result.current.enregistrerTrajet(`${year}-04-01`, 'conges')
+      result.current.enregistrerTrajet(`${year}-04-02`, 'meteo')
+    })
+    const stats = result.current.getStats('annee')
+    expect(stats.joursTotal).toBe(4)
+    expect(stats.joursNonDeplacement).toBe(2)
+    expect(stats.joursComptes).toBe(2)
+    expect(stats.pourcentageVelo).toBe(50)
+  })
+
+  it('devrait gérer la période mois', () => {
+    const { result } = renderHook(() => useVelotafStore())
+    const date = new Date()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = date.getFullYear()
+    act(() => {
+      result.current.enregistrerTrajet(`${year}-${month}-01`, 'velo')
+      result.current.enregistrerTrajet(`${year}-${month}-02`, 'meteo')
+      result.current.enregistrerTrajet(`${year}-${month}-03`, 'teletravail')
+    })
+    const statsMois = result.current.getStats('mois')
+    expect(statsMois.joursTotal).toBe(3)
+    expect(statsMois.joursNonDeplacement).toBe(1)
+    expect(statsMois.pourcentageVelo).toBe(50)
+    expect(statsMois.distanceTotaleKm).toBe(20)
+  })
+
+  it('devrait calculer les économies totales (carburant + indemnité) et le CO2 économisé', () => {
+    const { result } = renderHook(() => useVelotafStore())
+    act(() => {
+      // 1 jour vélo, 10km aller+retour = 20km
+      // 20km * 6L/100 = 1.2L * 1.75€ = 2.10€ carburant
+      // 1 jour * 3€/jour = 3€ indemnité
+      // Total = 2.10€ + 3€ = 5.10€
+      // CO2 = 1.2L * 2.37 = 2.844kg ~ 2.8
+      result.current.enregistrerTrajet('2026-03-30', 'velo')
+    })
+    const stats = result.current.getStats()
+    expect(stats.carburantEconomiseEuro).toBe(2.10)
+    expect(stats.indemniteTotaleEuro).toBe(3)
+    expect(stats.economiesTotal).toBe(5.10)
+    expect(stats.co2EconomiseKg).toBe(2.8)
+  })
 })

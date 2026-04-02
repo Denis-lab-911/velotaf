@@ -9,18 +9,25 @@ const useVelotafStore = create(
         consommationL100: 6,
         prixCarburantEuro: 1.75,
         indemniteJourEuro: 3.00,
+        statsPeriod: 'annee',
       },
 
       trajets: {},
 
       updateSettings: (newSettings) => {
+        const numericKeys = ['distanceKm', 'consommationL100', 'prixCarburantEuro', 'indemniteJourEuro']
         const normalizedSettings = Object.entries(newSettings).reduce((acc, [key, value]) => {
-          if (typeof value === 'string') {
-            const parsed = Number(value)
-            acc[key] = Number.isNaN(parsed) ? 0 : parsed
-          } else if (typeof value === 'number') {
-            acc[key] = value
+          if (numericKeys.includes(key)) {
+            if (typeof value === 'string') {
+              const parsed = Number(value)
+              acc[key] = Number.isNaN(parsed) ? 0 : parsed
+            } else if (typeof value === 'number') {
+              acc[key] = value
+            } else {
+              acc[key] = value
+            }
           } else {
+            // Keep raw value for non-numeric fields (e.g., statsPeriod)
             acc[key] = value
           }
           return acc
@@ -43,30 +50,59 @@ const useVelotafStore = create(
           return { trajets: newTrajets }
         }),
 
-      getStats: () => {
+      getStats: (periode = null) => {
         const { trajets, settings } = get()
-        const { distanceKm, consommationL100, prixCarburantEuro, indemniteJourEuro } = settings
+        const {
+          distanceKm,
+          consommationL100,
+          prixCarburantEuro,
+          indemniteJourEuro,
+          statsPeriod,
+        } = settings
 
-        const tousLesTrajets = Object.values(trajets)
-        const joursVelo = tousLesTrajets.filter((s) => s === 'velo').length
-        const joursTotal = tousLesTrajets.length
+        const period = periode || statsPeriod || 'annee'
+        const now = new Date()
+        const yearNow = now.getFullYear()
+        const monthNow = now.getMonth()
 
-        const pourcentageVelo = joursTotal > 0
-          ? Math.round((joursVelo / joursTotal) * 100)
+        const trajetsFiltres = Object.entries(trajets).filter(([dateStr]) => {
+          const d = new Date(dateStr)
+          if (Number.isNaN(d.getTime())) return false
+          if (period === 'mois') {
+            return d.getFullYear() === yearNow && d.getMonth() === monthNow
+          }
+          return d.getFullYear() === yearNow
+        })
+
+        const joursVelo = trajetsFiltres.filter(([_, statut]) => statut === 'velo').length
+        const joursNonDeplacement = trajetsFiltres.filter(
+          ([_, statut]) => statut === 'conges' || statut === 'teletravail'
+        ).length
+        const joursComptes = Math.max(0, trajetsFiltres.length - joursNonDeplacement)
+
+        const pourcentageVelo = joursComptes > 0
+          ? Math.round((joursVelo / joursComptes) * 100)
           : 0
 
         const distanceTotaleKm = joursVelo * distanceKm * 2
         const carburantEconomiseL = (distanceTotaleKm * consommationL100) / 100
         const carburantEconomiseEuro = carburantEconomiseL * prixCarburantEuro
         const indemniteTotaleEuro = joursVelo * indemniteJourEuro
+        const co2EconomiseKg = carburantEconomiseL * 2.37
+        const economiesTotal = carburantEconomiseEuro + indemniteTotaleEuro
 
         return {
           joursVelo,
-          joursTotal,
+          joursTotal: trajetsFiltres.length,
+          joursNonDeplacement,
+          joursComptes,
           pourcentageVelo,
+          distanceTotaleKm: Math.round(distanceTotaleKm * 10) / 10,
           carburantEconomiseL: Math.round(carburantEconomiseL * 10) / 10,
           carburantEconomiseEuro: Math.round(carburantEconomiseEuro * 100) / 100,
           indemniteTotaleEuro: Math.round(indemniteTotaleEuro * 100) / 100,
+          co2EconomiseKg: Math.round(co2EconomiseKg * 10) / 10,
+          economiesTotal: Math.round(economiesTotal * 100) / 100,
         }
       },
     }),
