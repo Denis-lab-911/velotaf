@@ -9,9 +9,10 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
-        name: 'VéloTaf',
-        short_name: 'VéloTaf',
-        description: 'Suivez vos trajets domicile-travail à vélo',
+        name: 'VéloMafia',
+        short_name: 'VéloMafia',
+        description: 'Suivez vos trajets domicile-travail à vélo avec style',
+
         theme_color: '#16a34a',
         background_color: '#f0fdf4',
         display: 'standalone',

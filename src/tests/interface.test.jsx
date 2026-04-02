@@ -45,7 +45,7 @@ describe('BoutonTrajet', () => {
   it('devrait afficher le message de succès après clic sur Oui', () => {
     render(<BoutonTrajet />)
     fireEvent.click(screen.getByText(/Oui/))
-    expect(screen.getByText(/Bravo/)).toBeInTheDocument()
+    expect(screen.getByText('🚴')).toBeInTheDocument()
   })
 
   it('devrait afficher les raisons après clic sur Non', () => {

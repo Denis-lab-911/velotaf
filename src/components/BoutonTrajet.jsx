@@ -11,9 +11,28 @@ const RAISONS = [
   { id: 'autre', label: '🤷 Autre' },
 ]
 
+const MESSAGES_FELICITATIONS = [
+  'Bravo !',
+  'C\'est gagné !',
+  'Well done !',
+  'Amazing !',
+  'Super !',
+  'Top !',
+  'Excellent !',
+  'Chapeau !',
+  'Youhou !',
+  'C\'est parti !',
+  'Belle journée en perspective !',
+]
+
+const getMessageFelicitation = () => {
+  return MESSAGES_FELICITATIONS[Math.floor(Math.random() * MESSAGES_FELICITATIONS.length)]
+}
+
 export default function BoutonTrajet() {
   const { trajets, enregistrerTrajet, supprimerTrajet } = useVelotafStore()
   const [etape, setEtape] = useState('accueil') // accueil | raison
+  const [messageFelicitation] = useState(getMessageFelicitation)
   const date = aujourdhui()
   const trajetDuJour = trajets[date]
 
@@ -33,7 +52,7 @@ export default function BoutonTrajet() {
         {trajetDuJour === 'velo' ? (
           <>
             <span className="text-6xl">🚴</span>
-            <p className="text-green-700 font-bold text-xl mt-4">Bravo, vous avez pris le vélo !</p>
+            <p className="text-green-700 font-bold text-xl mt-4">{messageFelicitation}</p>
           </>
         ) : (
           <>

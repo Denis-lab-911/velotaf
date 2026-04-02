@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
 import useVelotafStore from '../stores/velotafStore'
 
-describe('VelotafStore', () => {
+describe('VéloMafiaStore', () => {
   beforeEach(() => {
   useVelotafStore.setState({
     trajets: {},
