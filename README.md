@@ -28,7 +28,7 @@ Application web progressive (PWA) pour suivre vos trajets domicile-travail à v�
 ## Installation et développement
 
 ### Prérequis
-- Node.js v22+ (via nvm)
+- Node.js v22+ (via nvm) — moteur requis pour faire tourner Vite et les outils de développement
 - Git
 
 ### Démarrage

@@ -13,10 +13,23 @@ const useVelotafStore = create(
 
       trajets: {},
 
-      updateSettings: (newSettings) =>
+      updateSettings: (newSettings) => {
+        const normalizedSettings = Object.entries(newSettings).reduce((acc, [key, value]) => {
+          if (typeof value === 'string') {
+            const parsed = Number(value)
+            acc[key] = Number.isNaN(parsed) ? 0 : parsed
+          } else if (typeof value === 'number') {
+            acc[key] = value
+          } else {
+            acc[key] = value
+          }
+          return acc
+        }, {})
+
         set((state) => ({
-          settings: { ...state.settings, ...newSettings },
-        })),
+          settings: { ...state.settings, ...normalizedSettings },
+        }))
+      },
 
       enregistrerTrajet: (date, statut) =>
         set((state) => ({

@@ -83,4 +83,13 @@ it("devrait calculer l'indemnité journalière", () => {
     expect(result.current.settings.distanceKm).toBe(15)
     expect(result.current.settings.consommationL100).toBe(6) // inchangé
   })
+
+  it('devrait normaliser les paramètres mal formatés (015 -> 15)', () => {
+    const { result } = renderHook(() => useVelotafStore())
+    act(() => {
+      result.current.updateSettings({ distanceKm: '015', consommationL100: '06.0' })
+    })
+    expect(result.current.settings.distanceKm).toBe(15)
+    expect(result.current.settings.consommationL100).toBe(6)
+  })
 })

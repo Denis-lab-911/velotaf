@@ -108,10 +108,17 @@ describe('Reglages', () => {
     expect(screen.getByText(/Distance domicile-travail/)).toBeInTheDocument()
   })
 
-  it('devrait afficher le bouton Sauvegarder quand ouvert', () => {
+  it('devrait sauvegarder distance en nombre normalisé et sans 0 initiaux', () => {
     render(<Reglages />)
     fireEvent.click(screen.getByText(/Réglages/))
-    expect(screen.getByText(/Sauvegarder/)).toBeInTheDocument()
+
+    const distanceInput = screen.getByRole('spinbutton', { name: /Distance domicile-travail/i })
+    fireEvent.change(distanceInput, { target: { value: '015' } })
+
+    fireEvent.click(screen.getByText(/Sauvegarder/))
+
+    expect(useVelotafStore.getState().settings.distanceKm).toBe(15)
+    expect(distanceInput.value).toBe('15')
   })
 })
 import Historique from '../components/Historique'
