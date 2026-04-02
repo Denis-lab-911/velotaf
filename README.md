@@ -1,16 +1,79 @@
-# React + Vite
+# 🚴 VéloTaf
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application web progressive (PWA) pour suivre vos trajets domicile-travail à vélo.
 
-Currently, two official plugins are available:
+## Fonctionnalités
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Saisie rapide** — Indiquez en 2 clics si vous avez pris le vélo
+- **Raisons d'absence** — Télétravail, congés, météo, agenda, fatigue, autre
+- **Jours fériés français** — Les week-ends et jours fériés sont exclus automatiquement
+- **Statistiques** — Pourcentage de trajets en vélo, carburant économisé, indemnité kilométrique
+- **Historique** — Vue calendrier et vue liste, avec possibilité de modifier les trajets passés
+- **Réglages** — Distance, consommation, prix du carburant et indemnité paramétrables
+- **PWA** — Installable sur Android comme une application native
+- **Synchronisation** — Sauvegarde automatique sur Google Drive *(à venir)*
 
-## React Compiler
+## Stack technique
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Outil | Rôle |
+|---|---|
+| React + Vite | Framework frontend |
+| Tailwind CSS | Styles mobile-first |
+| Zustand | Gestion de l'état |
+| Vitest + Testing Library | Tests automatisés |
+| GitHub Actions | CI/CD |
+| Vercel | Hébergement |
+| vite-plugin-pwa | PWA et service worker |
 
-## Expanding the ESLint configuration
+## Installation et développement
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prérequis
+- Node.js v22+ (via nvm)
+- Git
+
+### Démarrage
+```bash
+# Cloner le projet
+git clone git@github.com:Denis-lab-911/velotaf.git
+cd velotaf
+
+# Installer les dépendances
+npm install --legacy-peer-deps
+
+# Lancer le serveur de développement
+npm run dev
+```
+
+### Tests
+```bash
+npm run test
+```
+
+### Build de production
+```bash
+npm run build
+```
+
+### Régénérer les icônes PWA
+```bash
+node scripts/generate-icons.mjs
+```
+
+## Variables d'environnement
+
+Créez un fichier `.env.local` à la racine du projet :
+```
+VITE_GOOGLE_CLIENT_ID=votre_client_id_google
+```
+
+## CI/CD
+
+Chaque `git push` sur la branche `main` déclenche automatiquement :
+1. L'installation des dépendances
+2. Les tests automatisés (36 tests)
+3. Le build de production
+4. Le déploiement sur Vercel (si les tests passent)
+
+## Licence
+
+Projet personnel — tous droits réservés.
