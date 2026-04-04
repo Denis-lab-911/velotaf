@@ -1,4 +1,4 @@
-# CLAUDE.md — Contexte du projet VéloMafia
+# CLAUDE.md — Contexte du projet veloboulo
 
 ## Description
 Application web progressive (PWA) pour suivre les trajets domicile-travail à vélo.

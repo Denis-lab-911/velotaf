@@ -1,4 +1,4 @@
-# 🚴 VéloMafia
+# 🚴 velo_boulo
 
 Application web progressive (PWA) pour suivre vos trajets domicile-travail à vélo. Rejoins le gang ! 🏍️
 

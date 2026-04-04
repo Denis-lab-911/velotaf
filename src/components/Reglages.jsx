@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import useVelotafStore from '../stores/velotafStore'
+import SyncGoogleDrive from './SyncGoogleDrive'
 
 export default function Reglages() {
   const { settings, updateSettings } = useVelotafStore()
@@ -102,7 +103,7 @@ export default function Reglages() {
             />
           </div>
 
-<div>
+          <div>
             <label htmlFor="indemniteType" className="block text-sm font-medium text-gray-600 mb-1">
               Type d'indemnité vélo
             </label>
@@ -167,12 +168,22 @@ export default function Reglages() {
               </div>
             </>
           )}
+
           <button
             onClick={handleSauvegarder}
             className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors"
           >
             {sauvegarde ? '✅ Sauvegardé !' : 'Sauvegarder'}
           </button>
+
+          {/* Section sauvegarde Google Drive */}
+          <div className="border-t border-gray-100 pt-4">
+            <p className="text-xs text-gray-400 mb-3 text-center">
+              💾 Sauvegarde optionnelle — connectez Google Drive pour ne pas perdre vos données en cas de changement d'appareil.
+            </p>
+            <SyncGoogleDrive />
+          </div>
+
         </div>
       )}
     </div>

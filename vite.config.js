@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
-        name: 'VéloMafia',
-        short_name: 'VéloMafia',
+        name: 'velo_boulo',
+        short_name: 'velo_boulo',
         description: 'Suivez vos trajets domicile-travail à vélo avec style',
 
         theme_color: '#16a34a',
